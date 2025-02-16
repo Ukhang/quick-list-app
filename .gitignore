@@ -9,9 +9,9 @@ dist/
 web-build/
 expo-env.d.ts
 .env
-client/ios
-client/android
-client/PlayStoreServiceAccount.json
+ui/ios
+ui/android
+ui/PlayStoreServiceAccount.json
 
 /ios
 /android
