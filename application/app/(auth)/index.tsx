@@ -3,6 +3,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { View } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
+import Button from "@/components/ui/button";
 
 export default function SignIn() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -15,9 +16,8 @@ export default function SignIn() {
   return (
     <View>
       <ThemedText type="title">Sign In</ThemedText>
-      <Link href="/sign-up">
-          Go to sign up
-        </Link>
+      <Link href="/sign-up">Go to sign up</Link>
+      <Button>Hello</Button>
     </View>
   );
 }
