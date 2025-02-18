@@ -2,7 +2,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { BodyScrollView } from "@/components/ui/BodyScrollView";
 import Button from "@/components/ui/button";
 import TextInput from "@/components/ui/text-input";
-import { useSignUp } from "@clerk/clerk-expo";
+import { isClerkAPIResponseError, useSignUp } from "@clerk/clerk-expo";
 import { ClerkAPIError } from "@clerk/types";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -36,7 +36,7 @@ export default function SignUp() {
 
       setPendingVerification(true);
     } catch (err) {
-    //   if (isClerkAPIResponseError(err)) setErrors(err.errors);
+      if (isClerkAPIResponseError(err)) setErrors(err.errors);
       console.error(JSON.stringify(err, null, 2));
     } finally {
       setIsLoading(false);
@@ -62,7 +62,7 @@ export default function SignUp() {
       }
     } catch (err) {
       console.error(JSON.stringify(err, null, 2));
-    //   setErrors(err.errors);
+      setErrors(errors);
     } finally {
       setIsLoading(false);
     }

@@ -1,11 +1,12 @@
-import { useSignIn } from "@clerk/clerk-expo";
+import { isClerkAPIResponseError, useSignIn } from "@clerk/clerk-expo";
 import { ThemedText } from "@/components/ThemedText";
 import { Link, useRouter } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import Button from "@/components/ui/button";
 import TextInput from "@/components/ui/text-input";
 import { BodyScrollView } from "@/components/ui/BodyScrollView";
 import { View } from "react-native";
+import { ClerkAPIError } from "@clerk/types";
 
 export default function SignIn() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -14,10 +15,35 @@ export default function SignIn() {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [errors, setErrors] = React.useState<ClerkAPIError[]>([]);
 
-  const onSignInPress = () => {
+  const onSignInPress = React.useCallback(async () => {
+    if (!isLoaded) return;
 
-  };
+    // if (process.env.EXPO_OS === "ios") {
+    //   await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // }
+    setIsSigningIn(true);
+
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: emailAddress,
+        password,
+      });
+
+      if (signInAttempt.status === "complete") {
+        await setActive({ session: signInAttempt.createdSessionId });
+        router.replace("/(index)");
+      } else {
+        console.error(JSON.stringify(signInAttempt, null, 2));
+      }
+    } catch (err) {
+      if (isClerkAPIResponseError (err)) setErrors(err.errors);
+      console.error(JSON.stringify(err, null, 2));
+    } finally {
+      setIsSigningIn(false);
+    }
+  }, [isLoaded, emailAddress, password]);
 
   return (
     <BodyScrollView contentContainerStyle={{
@@ -45,6 +71,11 @@ export default function SignIn() {
       >
         Sign in
       </Button>
+      {errors.map((error) => (
+        <ThemedText key={error.longMessage} style={{ color: "red" }}>
+          {error.longMessage}
+        </ThemedText>
+      ))}
 
       <View style={{ marginTop: 16, alignItems: "center" }}>
         <ThemedText>Don't have an account?</ThemedText>
