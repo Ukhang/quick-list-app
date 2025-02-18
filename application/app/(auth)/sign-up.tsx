@@ -6,7 +6,6 @@ import { useSignUp } from "@clerk/clerk-expo";
 import { ClerkAPIError } from "@clerk/types";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { View } from "react-native";
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -19,12 +18,54 @@ export default function SignUp() {
   const [errors, setErrors] = React.useState<ClerkAPIError[]>([]);
   const [code, setCode] = React.useState("");
 
-  const onSignUpPress = () => {
+  const onSignUpPress = async () => {
+    if (!isLoaded) return;
+    // if (process.env.EXPO_OS === "ios") {
+    //   await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // }
+    setIsLoading(true);
+    setErrors([]);
 
+    try {
+      await signUp.create({
+        emailAddress,
+        password,
+      });
+
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+
+      setPendingVerification(true);
+    } catch (err) {
+    //   if (isClerkAPIResponseError(err)) setErrors(err.errors);
+      console.error(JSON.stringify(err, null, 2));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const onVerifyPress = () => {
-    
+  const onVerifyPress = async () => {
+    if (!isLoaded) return;
+    // if (process.env.EXPO_OS === "ios") {
+    //   await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // }
+    setIsLoading(true);
+
+    try {
+      const signUpAttempt = await signUp.attemptEmailAddressVerification({
+        code,
+      });
+      if (signUpAttempt.status === "complete") {
+        await setActive({ session: signUpAttempt.createdSessionId });
+        router.replace("/");
+      } else {
+        console.error(JSON.stringify(signUpAttempt, null, 2));
+      }
+    } catch (err) {
+      console.error(JSON.stringify(err, null, 2));
+    //   setErrors(err.errors);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (pendingVerification) {
