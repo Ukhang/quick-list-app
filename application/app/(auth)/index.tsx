@@ -1,10 +1,10 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import { ThemedText } from "@/components/ThemedText";
-import { View } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import Button from "@/components/ui/button";
 import TextInput from "@/components/ui/text-input";
+import { BodyScrollView } from "@/components/ui/BodyScrollView";
 
 export default function SignIn() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -15,11 +15,9 @@ export default function SignIn() {
   const [isSigningIn, setIsSigningIn] = useState("");
 
   return (
-    <View>
-      <ThemedText type="title">Sign In</ThemedText>
-      <Link href="/sign-up">Go to sign up</Link>
-      <TextInput label="hello"/>
+    <BodyScrollView>
+      <TextInput label=""/>
       <Button>Hello</Button>
-    </View>
+    </BodyScrollView>
   );
 }
