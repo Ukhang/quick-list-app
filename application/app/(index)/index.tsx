@@ -4,7 +4,7 @@ import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { appleBlue } from "@/constants/Colors";
 import { useClerk } from "@clerk/clerk-expo";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Platform, Pressable } from "react-native";
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
 
   const renderHeaderRight = () => (
     <Pressable
-    //   onPress={handleNewListPress}
+      onPress={() => router.push("/list/new")}
     //   style={styles.headerButton}
     >
       <IconSymbol name="plus" color={appleBlue} />
@@ -23,7 +23,7 @@ export default function Home() {
     <Pressable
       // work around for https://github.com/software-mansion/react-native-screens/issues/2219
       // onPress={handleProfilePress}
-    //   onPress={handleProfilePress}
+      onPress={() => router.push("/profile")}
     //   style={[styles.headerButton, styles.headerButtonLeft]}
     >
       <IconSymbol
