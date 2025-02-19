@@ -3,6 +3,7 @@ import { BodyScrollView } from "@/components/ui/BodyScrollView";
 import Button from "@/components/ui/button";
 import TextInput from "@/components/ui/text-input";
 import { appleBlue, backgroundColors, emojies } from "@/constants/Colors";
+import { useListCreation } from "@/context/ListCreationContext";
 import { Link, Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -10,8 +11,22 @@ import { StyleSheet, Text, View } from "react-native";
 export default function CreateScreen() {
   const [listName, setListName] = useState("");
   const [listDescription, setListDescription] = useState("");
+  const { selectedEmoji, setSelectedEmoji, selectedColor, setSelectedColor } = useListCreation();
 
   const handleCreateList = () => {};
+
+  useEffect(() => {
+    setSelectedEmoji(emojies[Math.floor(Math.random() * emojies.length)]);
+    setSelectedColor(
+      backgroundColors[Math.floor(Math.random() * backgroundColors.length)]
+    );
+
+    // Cleanup function to reset context when unmounting
+    return () => {
+      setSelectedEmoji("");
+      setSelectedColor("");
+    };
+  }, []);
 
   return (
     <>
@@ -36,16 +51,16 @@ export default function CreateScreen() {
             containerStyle={styles.titleInputContainer}
           />
           <Link
-            href={{ pathname: "/" }}
-            style={[styles.emojiButton, { borderColor: "blue" }]}
+            href={{ pathname: "/emoji-picker" }}
+            style={[styles.emojiButton, { borderColor: selectedColor }]}
           >
             <View style={styles.emojiContainer}>
-              <Text>{"🚀"}</Text>
+              <Text>{selectedEmoji}</Text>
             </View>
           </Link>
           <Link
-            href={{ pathname: "/" }}
-            style={[styles.colorButton, { borderColor: "blue" }]}
+            href={{ pathname: "/color-picker" }}
+            style={[styles.colorButton, { borderColor: selectedColor }]}
           >
             <View style={styles.colorContainer}>
               <View
@@ -53,7 +68,7 @@ export default function CreateScreen() {
                   width: 24,
                   height: 24,
                   borderRadius: 100,
-                  backgroundColor: "blue",
+                  backgroundColor: selectedColor,
                 }}
               />
             </View>
