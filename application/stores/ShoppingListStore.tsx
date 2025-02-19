@@ -1,4 +1,7 @@
 import * as UiReact from "tinybase/ui-react/with-schemas";
+import { createMergeableStore } from "tinybase/with-schemas";
+import { useCreateClientPersisterAndStart } from "./persistence/useCreateClientPersisterAndStart";
+import { useCreateServerSynchronizerAndStart } from "./synchronization/useCreateServerSynchronizerAndStart";
 
 const STORE_ID_PREFIX = "shoppingListStore-";
 
@@ -54,10 +57,20 @@ const useStoreId = (listId: string) => STORE_ID_PREFIX + listId;
 
 export default function ShoppingListStore({
   listId,
-  initialContentJson
+  initialContentJson,
 }: {
   listId: string;
   initialContentJson: string;
 }) {
-  
+  const storeId = useStoreId(listId);
+  const store = useCreateMergeableStore(() =>
+    createMergeableStore().setSchema(TABLES_SCHEMA, VALUES_SCHEMA)
+  );
+  useCreateClientPersisterAndStart(storeId, store, initialContentJson, () =>
+    store.setRow("collaborators", userId, { nickname })
+  );
+  useCreateServerSynchronizerAndStart(storeId, store);
+  useProvideStore(storeId, store);
+
+  return null;
 }
