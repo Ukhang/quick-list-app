@@ -28,7 +28,10 @@ export default function CreateScreen() {
       selectedColor
     );
 
-    // todo navigate to list details
+    router.replace({
+      pathname: "/list/[listId]",
+      params: { listId },
+    });
   };
 
   useEffect(() => {
