@@ -15,7 +15,7 @@ export default function HomeLayout() {
 
   return (
     <TinyBaseProvider>
-      {/* <ShoppingListsStore> */}
+      <ShoppingListsStore>
         <ListCreationProvider>
           <Stack
             screenOptions={{
@@ -89,7 +89,7 @@ export default function HomeLayout() {
             />
           </Stack>
         </ListCreationProvider>
-      {/* </ShoppingListsStore> */}
+      </ShoppingListsStore>
     </TinyBaseProvider>
   );
 }
