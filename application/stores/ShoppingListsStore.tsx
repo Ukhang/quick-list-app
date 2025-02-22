@@ -5,6 +5,8 @@ import { createMergeableStore } from "tinybase/with-schemas";
 import { useCreateClientPersisterAndStart } from "./persistence/useCreateClientPersisterAndStart";
 import { useCreateServerSynchronizerAndStart } from "./synchronization/useCreateServerSynchronizerAndStart";
 import ShoppingListStore from "./ShoppingListStore";
+import { useCallback } from "react";
+import { randomUUID } from "expo-crypto";
 
 const STORE_ID_PREFIX = "shoppingListsStore-";
 
@@ -26,6 +28,29 @@ const {
 } = UiReact as UiReact.WithSchemas<[typeof TABLES_SCHEMA, NoValuesSchema]>;
 
 const useStoreId = () => STORE_ID_PREFIX + useUser().user.id;
+
+export const useAddShoppingListCallback = () => {
+  const store = useStore(useStoreId());
+  return useCallback(
+    (name: string, description: string, emoji: string, color: string) => {
+      const id = randomUUID();
+      store.setRow("lists", id, {
+        id,
+        initialContentJson: JSON.stringify({
+          id,
+          name,
+          description,
+          emoji,
+          color,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }),
+      });
+      return id;
+    },
+    [store]
+  );
+};
 
 export default function ShoppingListsStore() {
   const storeId = useStoreId();
