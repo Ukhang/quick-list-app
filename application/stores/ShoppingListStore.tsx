@@ -5,6 +5,7 @@ import { useCreateServerSynchronizerAndStart } from "./synchronization/useCreate
 import { useUserIdAndNickname } from "@/hooks/useNicknames";
 import { useCallback } from "react";
 import { randomUUID } from "expo-crypto";
+import { useRemoteRowId } from "tinybase/ui-react";
 
 const STORE_ID_PREFIX = "shoppingListStore-";
 
@@ -81,6 +82,19 @@ export const useShoppingListProductIds = (
     limit,
     useStoreId(listId)
   );
+
+export const useShoppingListProductCreatedByNickname = (
+  listId: string,
+  productId: string
+) => {
+  ("");
+  const userId = useRemoteRowId(
+    "createdByNickname",
+    productId,
+    useStoreId(listId)
+  );
+  return useCell("collaborators", userId, "nickname", useStoreId(listId));
+};
 
 export const useShoppingListProductCell = <
   CellId extends ShoppingListProductCellId
