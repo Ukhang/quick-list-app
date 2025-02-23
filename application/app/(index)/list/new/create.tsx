@@ -4,7 +4,8 @@ import Button from "@/components/ui/button";
 import TextInput from "@/components/ui/text-input";
 import { appleBlue, backgroundColors, emojies } from "@/constants/Colors";
 import { useListCreation } from "@/context/ListCreationContext";
-import { Link, Stack, useRouter } from "expo-router";
+import { useAddShoppingListCallback } from "@/stores/ShoppingListsStore";
+import { Link, router, Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -13,7 +14,25 @@ export default function CreateScreen() {
   const [listDescription, setListDescription] = useState("");
   const { selectedEmoji, setSelectedEmoji, selectedColor, setSelectedColor } = useListCreation();
 
-  const handleCreateList = () => {};
+  const useAddShoppingList = useAddShoppingListCallback();
+
+  const handleCreateList = () => {
+    if (!listName) {
+      return;
+    }
+
+    const listId = useAddShoppingList(
+      listName,
+      listDescription,
+      selectedEmoji,
+      selectedColor
+    );
+
+    router.replace({
+      pathname: "/list/[listId]",
+      params: { listId },
+    });
+  };
 
   useEffect(() => {
     setSelectedEmoji(emojies[Math.floor(Math.random() * emojies.length)]);
