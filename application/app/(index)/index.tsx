@@ -1,4 +1,5 @@
 import { IconCircle } from "@/components/IconCircle";
+import ShoppingListItem from "@/components/ShoppingListItem";
 import { ThemedText } from "@/components/ThemedText";
 import { BodyScrollView } from "@/components/ui/BodyScrollView";
 import Button from "@/components/ui/button";
@@ -73,12 +74,9 @@ export default function Home() {
       <BodyScrollView contentContainerStyle={{ padding: 16 }}>
         <FlatList
           data={shoppingListIds}
-          // renderItem={({ item: listId }) => (
-          //   <ShoppingListItem listId={listId} />
-          // )}
           renderItem={({ item: listId }) => (
-            <Link href={{ pathname: "/list/[listId]", params: { listId } }}>{listId}</Link>
-          )}
+            <ShoppingListItem listId={listId} />
+          )}  
           contentContainerStyle={styles.listContainer}
           contentInsetAdjustmentBehavior="automatic"
           ListEmptyComponent={renderEmptyList}

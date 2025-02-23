@@ -54,6 +54,9 @@ export const useAddShoppingListCallback = () => {
 
 export const useShoppingListIds = () => useRowIds("lists", useStoreId());
 
+export const useDelShoppingListCallback = (id: string) =>
+  useDelRowCallback("lists", id, useStoreId());
+
 export default function ShoppingListsStore() {
   const storeId = useStoreId();
   const store = useCreateMergeableStore(() =>
