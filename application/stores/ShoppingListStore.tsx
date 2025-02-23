@@ -1,8 +1,10 @@
 import * as UiReact from "tinybase/ui-react/with-schemas";
-import { createMergeableStore, Value } from "tinybase/with-schemas";
+import { Cell, createMergeableStore, Value } from "tinybase/with-schemas";
 import { useCreateClientPersisterAndStart } from "./persistence/useCreateClientPersisterAndStart";
 import { useCreateServerSynchronizerAndStart } from "./synchronization/useCreateServerSynchronizerAndStart";
 import { useUserIdAndNickname } from "@/hooks/useNicknames";
+import { useCallback } from "react";
+import { randomUUID } from "expo-crypto";
 
 const STORE_ID_PREFIX = "shoppingListStore-";
 
@@ -56,12 +58,55 @@ const {
 
 const useStoreId = (listId: string) => STORE_ID_PREFIX + listId;
 
-export const useShoppingListProductCount = (listId: string) => useRowCount("products", useStoreId(listId));
+export const useShoppingListProductCount = (listId: string) =>
+  useRowCount("products", useStoreId(listId));
 
 export const useShoppingListUserNicknames = (listId: string) =>
   Object.entries(useTable("collaborators", useStoreId(listId))).map(
     ([, { nickname }]) => nickname
   );
+
+export const useShoppingListProductIds = (
+  listId: string,
+  cellId: ShoppingListProductCellId = "createdAt",
+  descending?: boolean,
+  offset?: number,
+  limit?: number
+) =>
+  useSortedRowIds(
+    "products",
+    cellId,
+    descending,
+    offset,
+    limit,
+    useStoreId(listId)
+  );
+
+export const useShoppingListProductCell = <
+  CellId extends ShoppingListProductCellId
+>(
+  listId: string,
+  productId: string,
+  cellId: CellId
+): [
+  Cell<Schemas[0], "products", CellId>,
+  (cell: Cell<Schemas[0], "products", CellId>) => void
+] => [
+  useCell("products", productId, cellId, useStoreId(listId)),
+  useSetCellCallback(
+    "products",
+    productId,
+    cellId,
+    (cell: Cell<Schemas[0], "products", CellId>) => cell,
+    [],
+    useStoreId(listId)
+  ),
+];
+
+export const useDelShoppingListProductCallback = (
+  listId: string,
+  productId: string
+) => useDelRowCallback("products", productId, useStoreId(listId));
 
 export const useShoppingListValue = <ValueId extends ShoppingListValueId>(
   listId: string,
@@ -78,6 +123,28 @@ export const useShoppingListValue = <ValueId extends ShoppingListValueId>(
     useStoreId(listId)
   ),
 ];
+
+export const useAddShoppingListProductCallback = (listId: string) => {
+  const store = useStore(useStoreId(listId));
+  const [userId] = useUserIdAndNickname();
+  return useCallback(
+    (name: string, quantity: number, units: string, notes: string) => {
+      const id = randomUUID();
+      store.setRow("products", id, {
+        id,
+        name,
+        quantity,
+        units,
+        notes,
+        createdBy: userId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+      return id;
+    },
+    [store, listId]
+  );
+};
 
 export default function ShoppingListStore({
   listId,
