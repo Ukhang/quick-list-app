@@ -97,6 +97,25 @@ export default function HomeLayout() {
               headerTitle: "Details",
             }}
           />
+          <Stack.Screen
+            name="list/[listId]/edit"
+            options={{
+              presentation: "formSheet",
+              sheetAllowedDetents: [0.5, 0.75, 1],
+              sheetGrabberVisible: true,
+              headerLargeTitle: false,
+              headerTitle: "Edit list",
+            }}
+          />
+          <Stack.Screen
+            name="list/[listId]/share"
+            options={{
+              presentation: "formSheet",
+              sheetGrabberVisible: true,
+              headerLargeTitle: false,
+              headerTitle: "Invite",
+            }}
+          />
         </Stack>
       </ListCreationProvider>
     </TinyBaseProvider>
