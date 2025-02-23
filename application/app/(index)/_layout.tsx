@@ -87,6 +87,16 @@ export default function HomeLayout() {
               sheetGrabberVisible: true,
             }}
           />
+          <Stack.Screen
+            name="list/[listId]/product/[productId]"
+            options={{
+              presentation: "formSheet",
+              sheetAllowedDetents: [0.75, 1],
+              sheetGrabberVisible: true,
+              headerLargeTitle: false,
+              headerTitle: "Details",
+            }}
+          />
         </Stack>
       </ListCreationProvider>
     </TinyBaseProvider>
