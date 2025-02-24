@@ -2,8 +2,7 @@
 
 A multi-platform list management application built with cutting-edge technologies, offering real-time synchronization while prioritizing offline-first functionality.
 
-![preview1](https://github.com/user-attachments/assets/5c199ed0-137a-4e94-b7f6-d099dc136888)
-![preview2](https://github.com/user-attachments/assets/2d9d592d-a4c9-4340-90df-e631203761e5)
+![preview](https://github.com/user-attachments/assets/8fad5e4f-f78a-4c51-af7c-b95300bd3c4b)
 
 ---
 
