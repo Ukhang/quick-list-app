@@ -6,6 +6,8 @@ import { isClerkAPIResponseError, useSignUp } from "@clerk/clerk-expo";
 import { ClerkAPIError } from "@clerk/types";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { Image } from "react-native";
+import { View } from "react-native";
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -99,7 +101,21 @@ export default function SignUp() {
         padding: 16,
       }}
     >
-       <TextInput
+      <View
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 40,
+          paddingBottom: 40
+        }}
+      >
+        <Image
+          source={require("@/assets/images/logo.png")}
+          style={{ width: 100, height: 100, paddingTop: 40, paddingBottom: 40 }}
+        />
+      </View>
+      <TextInput
         autoCapitalize="none"
         value={emailAddress}
         placeholder="Enter email"

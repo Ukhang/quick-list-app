@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import Button from "@/components/ui/button";
 import TextInput from "@/components/ui/text-input";
 import { BodyScrollView } from "@/components/ui/BodyScrollView";
-import { View } from "react-native";
+import { View, Image } from "react-native";
 import { ClerkAPIError } from "@clerk/types";
 
 export default function SignIn() {
@@ -20,9 +20,6 @@ export default function SignIn() {
   const onSignInPress = React.useCallback(async () => {
     if (!isLoaded) return;
 
-    // if (process.env.EXPO_OS === "ios") {
-    //   await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    // }
     setIsSigningIn(true);
 
     try {
@@ -38,7 +35,7 @@ export default function SignIn() {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
     } catch (err) {
-      if (isClerkAPIResponseError (err)) setErrors(err.errors);
+      if (isClerkAPIResponseError(err)) setErrors(err.errors);
       console.error(JSON.stringify(err, null, 2));
     } finally {
       setIsSigningIn(false);
@@ -46,9 +43,26 @@ export default function SignIn() {
   }, [isLoaded, emailAddress, password]);
 
   return (
-    <BodyScrollView contentContainerStyle={{
-      padding: 16,
-    }}>
+    <BodyScrollView
+      contentContainerStyle={{
+        padding: 16,
+      }}
+    >
+      <View
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 40,
+          paddingBottom: 40
+        }}
+      >
+        <Image
+          source={require("@/assets/images/logo.png")}
+          style={{ width: 100, height: 100, }}
+        />
+      </View>
+
       <TextInput
         label="Email"
         value={emailAddress}
@@ -64,7 +78,7 @@ export default function SignIn() {
         secureTextEntry={true}
         onChangeText={(password) => setPassword(password)}
       />
-       <Button
+      <Button
         onPress={onSignInPress}
         loading={isSigningIn}
         disabled={!emailAddress || !password || isSigningIn}
@@ -85,10 +99,7 @@ export default function SignIn() {
       </View>
       <View style={{ marginTop: 16, alignItems: "center" }}>
         <ThemedText>Forgot password?</ThemedText>
-        <Button
-          onPress={() => router.push("/reset-password")}
-          variant="ghost"
-        >
+        <Button onPress={() => router.push("/reset-password")} variant="ghost">
           Reset password
         </Button>
       </View>
